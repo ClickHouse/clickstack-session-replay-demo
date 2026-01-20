@@ -1,0 +1,19 @@
+services:
+  clickstack:
+    image: clickhouse/clickstack-all-in-one:latest
+    ports:
+      - "8080:8080"
+      - "4317:4317"
+      - "4318:4318"
+    # NO environment variables - let it auto-generate the key
+
+  demo-app:
+    build: ./app
+    ports:
+      - "3000:3000"
+    environment:
+      - CLICKSTACK_API_KEY=${CLICKSTACK_API_KEY}
+    depends_on:
+      - clickstack
+    profiles:
+      - demo
