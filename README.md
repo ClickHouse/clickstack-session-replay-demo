@@ -10,8 +10,6 @@ This demo shows how easy it is to add session replay to any web application.
 docker-compose up -d clickstack
 ```
 
-Wait ~30 seconds for initialization.
-
 ### 2. Get Your API Key
 
 1. Open http://localhost:8080
@@ -32,11 +30,15 @@ docker-compose --profile demo up demo-app
    - Filter by category
    - View code examples
    - Bookmark topics
+
+<img src="app/public/images/demo-app.png" alt="app screenshot">
    
 2. **View the replay**: http://localhost:8080
    - Navigate to **Client Sessions**
    - Find your session
    - Click ▶️ to replay
+
+<img src="app/public/images/hyperdx-session.png" alt="app screenshot">
 
 ## Instrumentation
 

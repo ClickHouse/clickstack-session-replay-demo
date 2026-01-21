@@ -320,6 +320,7 @@ header {
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
   margin-bottom: 3rem;
+  grid-auto-rows: 1fr;
 }
 
 .doc-card {
@@ -329,6 +330,9 @@ header {
   padding: 1.5rem;
   transition: all 0.2s;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .doc-card:hover {
@@ -365,6 +369,7 @@ header {
   font-size: 0.875rem;
   color: var(--ch-text-muted);
   line-height: 1.6;
+  flex: 1;
   margin-bottom: 1rem;
 }
 
