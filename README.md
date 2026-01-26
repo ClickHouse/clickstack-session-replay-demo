@@ -3,6 +3,8 @@
 An interactive demo showing how to instrument a web application for session replay with ClickStack.
 This demo shows how easy it is to add session replay to any web application.
 
+For a pre-instrumented version of the app, checkout the `pre-instrumented` branch. If running the pre-instrumented branch, see [Instrumentation](#instrumentation)
+
 ## Quick Start
 
 ### 1. Start ClickStack
@@ -35,6 +37,7 @@ docker-compose --profile demo up demo-app
    
 2. **View the replay**: http://localhost:8080
    - Navigate to **Client Sessions**
+   - Adjust your timeframe to include your session (likely last "15 minutes")
    - Find your session
    - Click ▶️ to replay
 
@@ -42,13 +45,13 @@ docker-compose --profile demo up demo-app
 
 ## Instrumentation
 
-### 1. Include the SDK (`app/public/index.html` line 11)
+### 1. Include the SDK (`app/public/index.html`)
 
 ```html
 <script src="https://unpkg.com/@hyperdx/browser@0.21.0/build/index.js"></script>
 ```
 
-### 2. Initialize ClickStack (`app/public/js/app.js` lines 1-17)
+### 2. Initialize ClickStack (`app/public/js/app.js`)
 
 ```javascript
 window.HyperDX.init({
@@ -79,11 +82,13 @@ The API key isn't set correctly. Make sure you:
 ## Cleanup
 
 Stop the services:
+
 ```bash
 docker-compose down
 ```
 
-Remove all data (ClickHouse database, MongoDB, etc.):
+Remove all data:
+
 ```bash
 docker-compose down -v
 ```

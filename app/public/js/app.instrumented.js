@@ -1,18 +1,27 @@
 /* ═══════════════════════════════════════════════════════════════
    CLICKSTACK INSTRUMENTATION - STEP 2 OF 2
    
-   Insert the ClickStack SDK initialization code here:
+   Initialize the ClickStack Browser SDK with your configuration.
    
-   window.HyperDX.init({
-     url: 'http://localhost:4318',
-     apiKey: window.CLICKSTACK_API_KEY || 'YOUR_API_KEY_HERE',
-     service: 'clickhouse-session-replay-demo',
-     consoleCapture: true,
-     advancedNetworkCapture: true,
-   });
+   This is the ONLY instrumentation code needed to enable:
+   - Session replay
+   - Console log capture
+   - Network request/response capture
+   - Error tracking
+   - User interaction capture
    
-   See app.instrumented.js for the complete example.
+   Everything else in this file is normal application code.
    ═══════════════════════════════════════════════════════════════ */
+window.HyperDX.init({
+  url: 'http://localhost:4318',              // OTel collector endpoint
+  apiKey: window.CLICKSTACK_API_KEY || 'YOUR_API_KEY_HERE',  // API key (injected by server.js)
+  service: 'clickhouse-session-replay-demo', // Service name in HyperDX
+  consoleCapture: true,                      // Capture console.log(), console.error(), etc.
+  advancedNetworkCapture: true,              // Capture full HTTP request/response data
+});
+
+console.log('⚡ ClickStack Session Replay Demo initialized');
+console.log('Service: clickhouse-session-replay-demo');
 
 /* ═══════════════════════════════════════════════════════════════
    END CLICKSTACK INSTRUMENTATION
