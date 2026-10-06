@@ -13,6 +13,8 @@ services:
       - "3000:3000"
     environment:
       - CLICKSTACK_API_KEY=${CLICKSTACK_API_KEY}
+      - CLICKSTACK_UI_URL=${CLICKSTACK_UI_URL:-http://localhost:8080/sessions}
+      - CLICKSTACK_OTEL_ENDPOINT=${CLICKSTACK_OTEL_ENDPOINT:-http://localhost:4318}
     depends_on:
       - clickstack
     profiles:

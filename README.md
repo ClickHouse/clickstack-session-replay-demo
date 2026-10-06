@@ -43,6 +43,26 @@ docker-compose --profile demo up demo-app
 
 <img src="app/public/images/hyperdx-session.png" alt="app screenshot">
 
+## Fully managed ClickHouse Observability
+
+Use an existing fully managed service instead of starting local ClickStack. In your service, open **Team Settings → Managed Telemetry** and copy the OTLP HTTP endpoint and API key. Set `CLICKSTACK_UI_URL` to your service’s UI URL. To link directly to replays, open **Client Sessions** and copy its browser URL.
+
+```bash
+export CLICKSTACK_OTEL_ENDPOINT='https://YOUR_OTEL_ENDPOINT:4318'
+export CLICKSTACK_UI_URL='YOUR_CLIENT_SESSIONS_URL'
+printf "API key: "
+read -r -s CLICKSTACK_API_KEY
+printf "\n"
+export CLICKSTACK_API_KEY
+docker compose --profile demo up --build --no-deps demo-app
+```
+
+Keep the `https://` prefix and omit signal paths such as `/v1/traces`. `--no-deps` starts only the demo app, without the local ClickStack service. Open http://localhost:3000, interact with the app, then select **Open Observability** in the demo to view the replay in your managed service. The service name is `clickhouse-session-replay-demo`.
+
+The browser receives the endpoint and ingestion API key, so use a test service for this demo. Stop the app with `Ctrl+C`, and close its browser tabs to stop browser telemetry.
+
+When unset, `CLICKSTACK_OTEL_ENDPOINT` defaults to `http://localhost:4318` and `CLICKSTACK_UI_URL` defaults to `http://localhost:8080/sessions`. The local setup requires no URL configuration.
+
 ## Instrumentation
 
 ### 1. Include the SDK (`app/public/index.html`)
@@ -55,8 +75,8 @@ docker-compose --profile demo up demo-app
 
 ```javascript
 window.HyperDX.init({
-  url: 'http://localhost:4318',
-  apiKey: window.CLICKSTACK_API_KEY,
+  url: window.CLICKSTACK_CONFIG.endpoint,
+  apiKey: window.CLICKSTACK_CONFIG.apiKey,
   service: 'clickhouse-session-replay-demo',
   consoleCapture: true,
   advancedNetworkCapture: true,
