@@ -4,8 +4,8 @@
    Insert the ClickStack SDK initialization code here:
    
    window.HyperDX.init({
-     url: 'http://localhost:4318',
-     apiKey: window.CLICKSTACK_API_KEY || 'YOUR_API_KEY_HERE',
+     url: window.CLICKSTACK_CONFIG.endpoint,
+     apiKey: window.CLICKSTACK_CONFIG.apiKey,
      service: 'clickhouse-session-replay-demo',
      consoleCapture: true,
      advancedNetworkCapture: true,

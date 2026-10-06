@@ -5,20 +5,20 @@ const fs = require('fs');
 const app = express();
 const PORT = 3000;
 const CLICKSTACK_API_KEY = process.env.CLICKSTACK_API_KEY || '';
+const CLICKSTACK_OTEL_ENDPOINT = process.env.CLICKSTACK_OTEL_ENDPOINT || 'http://localhost:4318';
 
-// Inject API key into app.js BEFORE serving static files
+// Provide runtime browser configuration before the SDK initializes.
 app.get('/js/app.js', (req, res) => {
   const jsPath = path.join(__dirname, 'public', 'js', 'app.js');
-  let js = fs.readFileSync(jsPath, 'utf8');
-  
-  // Inject API key
-  js = js.replace(
-    'window.CLICKSTACK_API_KEY || \'YOUR_API_KEY_HERE\'',
-    `'${CLICKSTACK_API_KEY}'`
-  );
-  
+  const js = fs.readFileSync(jsPath, 'utf8');
+  const config = JSON.stringify({
+    endpoint: CLICKSTACK_OTEL_ENDPOINT,
+    apiKey: CLICKSTACK_API_KEY,
+  });
+
   res.setHeader('Content-Type', 'application/javascript');
-  res.send(js);
+  res.setHeader('Cache-Control', 'no-store');
+  res.send(`window.CLICKSTACK_CONFIG = ${config};\n${js}`);
 });
 
 // Serve other static files AFTER the app.js route
