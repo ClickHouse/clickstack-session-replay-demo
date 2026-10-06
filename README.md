@@ -45,10 +45,11 @@ docker-compose --profile demo up demo-app
 
 ## Fully managed ClickHouse Observability
 
-Use an existing fully managed service instead of starting local ClickStack. In your service, open **Team Settings → Managed Telemetry** and copy the OTLP HTTP endpoint and API key.
+Use an existing fully managed service instead of starting local ClickStack. In your service, open **Team Settings → Managed Telemetry** and copy the OTLP HTTP endpoint and API key. Also open **Client Sessions** and copy its browser URL for `CLICKSTACK_UI_URL`.
 
 ```bash
 export CLICKSTACK_OTEL_ENDPOINT='https://YOUR_OTEL_ENDPOINT:4318'
+export CLICKSTACK_UI_URL='YOUR_CLIENT_SESSIONS_URL'
 printf "API key: "
 read -r -s CLICKSTACK_API_KEY
 printf "\n"
@@ -58,11 +59,11 @@ docker compose --profile demo up --build --no-deps demo-app
 
 Enable the SDK as described in [Instrumentation](#instrumentation) before testing replay. After editing the app, rerun the command above to rebuild it.
 
-Keep the `https://` prefix and omit signal paths such as `/v1/traces`. `--no-deps` starts only the demo app, without the local ClickStack service. Open http://localhost:3000, interact with the app, then open **Client Sessions** in your managed service to view the replay. The service name is `clickhouse-session-replay-demo`.
+Keep the `https://` prefix and omit signal paths such as `/v1/traces`. `--no-deps` starts only the demo app, without the local ClickStack service. Open http://localhost:3000, interact with the app, then select **Open HyperDX** in the demo to view the replay in your managed service. The service name is `clickhouse-session-replay-demo`.
 
 The browser receives the endpoint and ingestion API key, so use a test service for this demo. Stop the app with `Ctrl+C`, and close its browser tabs to stop browser telemetry.
 
-When `CLICKSTACK_OTEL_ENDPOINT` is unset, the app uses `http://localhost:4318` for the local setup above.
+When unset, `CLICKSTACK_OTEL_ENDPOINT` defaults to `http://localhost:4318` and `CLICKSTACK_UI_URL` defaults to `http://localhost:8080/sessions`. The local setup requires no URL configuration.
 
 ## Instrumentation
 

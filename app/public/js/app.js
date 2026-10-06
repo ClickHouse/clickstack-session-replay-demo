@@ -1,3 +1,8 @@
+// Use the configured UI for both replay links.
+document.querySelectorAll('[data-clickstack-ui-link]').forEach(link => {
+  link.href = window.CLICKSTACK_CONFIG.uiUrl;
+});
+
 /* ═══════════════════════════════════════════════════════════════
    CLICKSTACK INSTRUMENTATION - STEP 2 OF 2
    
