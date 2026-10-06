@@ -4,6 +4,7 @@ const fs = require('fs');
 
 const app = express();
 const PORT = 3000;
+const CLICKSTACK_UI_URL = process.env.CLICKSTACK_UI_URL || 'http://localhost:8080/sessions';
 const CLICKSTACK_API_KEY = process.env.CLICKSTACK_API_KEY || '';
 const CLICKSTACK_OTEL_ENDPOINT = process.env.CLICKSTACK_OTEL_ENDPOINT || 'http://localhost:4318';
 
@@ -13,6 +14,7 @@ app.get('/js/app.js', (req, res) => {
   const js = fs.readFileSync(jsPath, 'utf8');
   const config = JSON.stringify({
     endpoint: CLICKSTACK_OTEL_ENDPOINT,
+    uiUrl: CLICKSTACK_UI_URL,
     apiKey: CLICKSTACK_API_KEY,
   });
 
