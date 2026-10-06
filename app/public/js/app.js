@@ -13,8 +13,8 @@
    Everything else in this file is normal application code.
    ═══════════════════════════════════════════════════════════════ */
 window.HyperDX.init({
-  url: 'http://localhost:4318',              // OTel collector endpoint
-  apiKey: window.CLICKSTACK_API_KEY || 'YOUR_API_KEY_HERE',  // API key (injected by server.js)
+  url: window.CLICKSTACK_CONFIG.endpoint,  // OTel collector endpoint
+  apiKey: window.CLICKSTACK_CONFIG.apiKey,  // API key (injected by server.js)
   service: 'clickhouse-session-replay-demo', // Service name in HyperDX
   consoleCapture: true,                      // Capture console.log(), console.error(), etc.
   advancedNetworkCapture: true,              // Capture full HTTP request/response data
