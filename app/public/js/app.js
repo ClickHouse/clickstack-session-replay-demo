@@ -8,12 +8,11 @@ document.querySelectorAll('[data-clickstack-ui-link]').forEach(link => {
    
    Insert the ClickStack SDK initialization code here:
    
-   window.HyperDX.init({
-     url: window.CLICKSTACK_CONFIG.endpoint,
+   window.ClickStack.init({
+     endpoint: window.CLICKSTACK_CONFIG.endpoint,
      apiKey: window.CLICKSTACK_CONFIG.apiKey,
-     service: 'clickhouse-session-replay-demo',
-     consoleCapture: true,
-     advancedNetworkCapture: true,
+     serviceName: 'clickhouse-session-replay-demo',
+     console: 'debug',
    });
    
    See app.instrumented.js for the complete example.

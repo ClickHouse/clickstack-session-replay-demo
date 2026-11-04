@@ -11,21 +11,20 @@ document.querySelectorAll('[data-clickstack-ui-link]').forEach(link => {
    This is the ONLY instrumentation code needed to enable:
    - Session replay
    - Console log capture
-   - Network request/response capture
+   - Network request tracing
    - Error tracking
    - User interaction capture
    
    Everything else in this file is normal application code.
    ═══════════════════════════════════════════════════════════════ */
-window.HyperDX.init({
-  url: window.CLICKSTACK_CONFIG.endpoint,              // OTel collector endpoint
-  apiKey: window.CLICKSTACK_CONFIG.apiKey,  // API key (injected by server.js)
-  service: 'clickhouse-session-replay-demo', // Service name in HyperDX
-  consoleCapture: true,                      // Capture console.log(), console.error(), etc.
-  advancedNetworkCapture: true,              // Capture full HTTP request/response data
+window.ClickStack.init({
+  endpoint: window.CLICKSTACK_CONFIG.endpoint,
+  apiKey: window.CLICKSTACK_CONFIG.apiKey,
+  serviceName: 'clickhouse-session-replay-demo',
+  console: 'debug',
 });
 
-console.log('⚡ ClickStack Session Replay Demo initialized');
+console.log('⚡ ClickStack Session Replay Demo initialization started');
 console.log('Service: clickhouse-session-replay-demo');
 
 /* ═══════════════════════════════════════════════════════════════
