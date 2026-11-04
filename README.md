@@ -3,7 +3,7 @@
 An interactive demo showing how to instrument a web application for session replay with ClickStack.
 This demo shows how easy it is to add session replay to any web application.
 
-For a pre-instrumented version of the app, checkout the `pre-instrumented` branch. If running the pre-instrumented branch, see [Instrumentation](#instrumentation)
+For an uninstrumented exercise with completed reference files, check out the `pre-instrumented` branch. If running the pre-instrumented branch, see [Instrumentation](#instrumentation)
 
 ## Quick Start
 
@@ -45,7 +45,7 @@ docker-compose --profile demo up demo-app
 
 ## Fully managed ClickHouse Observability
 
-Use an existing fully managed service instead of starting local ClickStack. In your service, open **Team Settings → Managed Telemetry** and copy the OTLP HTTP endpoint and API key. Set `CLICKSTACK_UI_URL` to your service’s UI URL. To link directly to replays, open **Client Sessions** and copy its browser URL.
+Use an existing fully managed service instead of starting local ClickStack. In your service, open **Team Settings → Data → Managed Telemetry** and copy the OTLP HTTP endpoint and API key. Set `CLICKSTACK_UI_URL` to your service’s UI URL. To link directly to replays, open **Client Sessions** and copy its browser URL.
 
 ```bash
 export CLICKSTACK_OTEL_ENDPOINT='https://YOUR_OTEL_ENDPOINT:4318'
@@ -53,9 +53,11 @@ export CLICKSTACK_UI_URL='YOUR_CLIENT_SESSIONS_URL'
 printf "API key: "
 read -r -s CLICKSTACK_API_KEY
 printf "\n"
-export CLICKSTACK_API_KEY
+export CLICKSTACK_API_KEY="Bearer ${CLICKSTACK_API_KEY}"
 docker compose --profile demo up --build --no-deps demo-app
 ```
+
+The managed SDK connection requires the `Bearer ` prefix added above. For a local collector, supply its raw ingestion key without this prefix.
 
 Keep the `https://` prefix and omit signal paths such as `/v1/traces`. `--no-deps` starts only the demo app, without the local ClickStack service. Open http://localhost:3000, interact with the app, then select **Open Observability** in the demo to view the replay in your managed service. The service name is `clickhouse-session-replay-demo`.
 
@@ -63,33 +65,34 @@ The browser receives the endpoint and ingestion API key, so use a test service f
 
 When unset, `CLICKSTACK_OTEL_ENDPOINT` defaults to `http://localhost:4318` and `CLICKSTACK_UI_URL` defaults to `http://localhost:8080/sessions`. The local setup requires no URL configuration.
 
+The new `@clickhouse/clickstack-browser` SDK masks text and inputs by default. To see unmasked demo text, set `maskAllText: false` only for content you intend to record. Self-managed replay requires a ClickStack release whose Sessions page supports `session.id`; see the [SDK compatibility requirements](https://github.com/ClickHouse/clickstack-browser#clickstack-versions).
+
 ## Instrumentation
 
 ### 1. Include the SDK (`app/public/index.html`)
 
 ```html
-<script src="https://unpkg.com/@hyperdx/browser@0.21.0/build/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clickhouse/clickstack-browser@1.0.0/dist/clickstack.iife.js"></script>
 ```
 
 ### 2. Initialize ClickStack (`app/public/js/app.js`)
 
 ```javascript
-window.HyperDX.init({
-  url: window.CLICKSTACK_CONFIG.endpoint,
+window.ClickStack.init({
+  endpoint: window.CLICKSTACK_CONFIG.endpoint,
   apiKey: window.CLICKSTACK_CONFIG.apiKey,
-  service: 'clickhouse-session-replay-demo',
-  consoleCapture: true,
-  advancedNetworkCapture: true,
+  serviceName: 'clickhouse-session-replay-demo',
+  console: 'debug',
 });
 ```
 
 ## Troubleshooting
 
-### Sessions Not Appearing in HyperDX
+### Sessions Not Appearing in ClickStack
 
 1. Check browser console (F12) for errors
 2. Verify ClickStack is running: `docker-compose ps`
-3. Confirm API key is set: `echo $CLICKSTACK_API_KEY`
+3. Confirm the API key is set without printing it: `test -n "$CLICKSTACK_API_KEY" && echo "API key is set"`
 4. Hard refresh the browser: `Cmd+Shift+R` (Mac) or `Ctrl+Shift+R` (Windows/Linux)
 
 ### 401 Unauthorized Errors
@@ -97,7 +100,7 @@ window.HyperDX.init({
 The API key isn't set correctly. Make sure you:
 1. Exported it in your terminal: `export CLICKSTACK_API_KEY='your-key'`
 2. Started the demo app in the **same terminal** where you exported it
-3. Got the key from HyperDX UI (not a random string)
+3. Got the key from ClickStack UI (not a random string)
 
 ## Cleanup
 
